@@ -20,7 +20,7 @@ import java.util.Map;
 public class FilmController {
     private final Map<Integer, Film> films = new HashMap<>();
     private static int nextId = 1;
-    
+
     private void validate(Film film) {
         final LocalDate date = film.getReleaseDate();
         final LocalDate movieBirthday = LocalDate.of(1895, Month.DECEMBER, 28);
@@ -29,7 +29,7 @@ public class FilmController {
             throw new ValidationException("Некорректная дата релиза.");
         }
     }
-    
+
     @PostMapping
     @ResponseBody
     public Film addFilm(@Valid @RequestBody Film film) {
@@ -39,7 +39,7 @@ public class FilmController {
         log.info("Добавлен фильм.");
         return film;
     }
-    
+
     @PutMapping
     @ResponseBody
     public Film updateFilm(@Valid @RequestBody Film film) {
@@ -53,7 +53,7 @@ public class FilmController {
             throw new NotFoundException("Фильм с заданным id не найден.");
         }
     }
-    
+
     @GetMapping
     @ResponseBody
     public ArrayList<Film> getFilms() {

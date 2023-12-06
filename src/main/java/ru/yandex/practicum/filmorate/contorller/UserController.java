@@ -16,7 +16,7 @@ import java.util.*;
 public class UserController {
     private final Map<Integer, User> users = new HashMap<>();
     private static int nextId = 1;
-    
+
     private void validate(User user) {
         final String name = user.getName();
         final LocalDate birthday = user.getBirthday();
@@ -29,7 +29,7 @@ public class UserController {
             user.setName(user.getLogin());
         }
     }
-    
+
     @PostMapping
     @ResponseBody
     public User addUser(@Valid @RequestBody User user) {
@@ -39,7 +39,7 @@ public class UserController {
         log.info("Добавлен пользователь.");
         return user;
     }
-    
+
     @PutMapping
     @ResponseBody
     public User updateUser(@Valid @RequestBody User user) {
@@ -53,7 +53,7 @@ public class UserController {
             throw new NotFoundException("Пользователь с заданным id не найден.");
         }
     }
-    
+
     @GetMapping
     @ResponseBody
     public ArrayList<User> getUsers() {
