@@ -15,40 +15,40 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FilmControllerTest {
     private Validator validator;
-    
+
     @BeforeEach
     public void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
     }
-    
+
     @Test
     public void shouldCreateFilm() {
         Film film = new Film("name", "desc",
                 LocalDate.of(2020, 11, 15), 50);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
-        
+
         assertEquals(0, violations.size());
     }
-    
+
     @Test
     public void shouldNotCreateFilmWhenInvalidDate() {
         Film film = new Film("name", "desc",
                 LocalDate.of(1884, 11, 15), 50);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
-        
+
         assertEquals(1, violations.size());
     }
-    
+
     @Test
     public void shouldNotCreateFilmWhenEmptyName() {
         Film film = new Film("", "desc",
                 LocalDate.of(2020, 11, 15), 50);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
-        
+
         assertEquals(1, violations.size());
     }
-    
+
     @Test
     public void shouldNotCreateFilmWhenDescriptionLonger200() {
         Film film = new Film("name",
@@ -59,16 +59,16 @@ class FilmControllerTest {
                         "беглеца и лишили всего, что он когда-либо любил.",
                 LocalDate.of(2020, 11, 15), 50);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
-        
+
         assertEquals(1, violations.size());
     }
-    
+
     @Test
     public void shouldNotCreateFilmWhenNegativeDuration() {
         Film film = new Film("name", "desc",
                 LocalDate.of(2020, 11, 15), -50);
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
-        
+
         assertEquals(1, violations.size());
     }
 }
