@@ -1,52 +1,46 @@
 package ru.yandex.practicum.filmorate.contorller;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.User;
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.*;
 
-@SuppressWarnings("checkstyle:Regexp")
 @RestController
 @RequestMapping("/users")
 @Slf4j
-public class UserController {
-    private final Map<Integer, User> users = new HashMap<>();
-    private static int nextId = 1;
+public class UserController extends Controller<User> {
 
     private void validate(User user) {
         final String name = user.getName();
-        final LocalDate birthday = user.getBirthday();
-        final LocalDate today = LocalDate.now();
-        if (birthday.isAfter(today)) {
-            log.warn("Попытка добавления пользователя с неправильной датой рождения.");
-            throw new ValidationException("День рождения пользователя не может быть в будущем.");
+        final String login = user.getLogin();
+        if (login.contains(" ")) {
+            log.warn("Попытка добавления пользователя с логином, содержащим пробел.");
+            throw new ValidationException("Логин не может содержать пробел.");
         }
         if (name == null) {
             user.setName(user.getLogin());
         }
     }
 
+    @Override
     @PostMapping
-    @ResponseBody
-    public User addUser(@Valid @RequestBody User user) {
+    public User add(@Valid @RequestBody User user) {
         validate(user);
         user.setId(nextId++);
-        users.put(user.getId(), user);
+        elements.put(user.getId(), user);
         log.info("Добавлен пользователь.");
         return user;
     }
 
+    @Override
     @PutMapping
-    @ResponseBody
-    public User updateUser(@Valid @RequestBody User user) {
+    public User update(@Valid @RequestBody User user) {
         validate(user);
-        if (users.containsKey(user.getId())) {
-            users.put(user.getId(), user);
-            log.warn("Пользователь с id = " + user.getId() + " обновлен.");
+        if (elements.containsKey(user.getId())) {
+            elements.put(user.getId(), user);
+            log.warn("Пользователь с id = {} обновлен.", user.getId());
             return user;
         } else {
             log.error("Попытка обновления несуществующего пользователя");
@@ -54,9 +48,9 @@ public class UserController {
         }
     }
 
+    @Override
     @GetMapping
-    @ResponseBody
-    public ArrayList<User> getUsers() {
-        return new ArrayList<>(users.values());
+    public List<User> getAll() {
+        return super.getAll();
     }
 }
