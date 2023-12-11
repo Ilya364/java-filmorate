@@ -1,19 +1,14 @@
 package ru.yandex.practicum.filmorate.contorller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public abstract class Controller<T> {
-    protected Map<Integer, T> elements = new HashMap<>();
-    protected int nextId = 1;
+public interface Controller<V> {
 
-    public abstract T add(T element);
+    V add(V element);
 
-    public abstract T update(T element);
+    V update(V element);
 
-    public List<T> getAll() {
-        return new ArrayList<>(elements.values());
-    }
+    V get(long id);
+
+    List<V> getAll();
 }
