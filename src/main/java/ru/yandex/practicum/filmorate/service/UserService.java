@@ -6,18 +6,20 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
-
-import java.util.ArrayList;
-import java.util.HashSet;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class UserService {
-    private final UserStorage storage;
+public class UserService extends AbstractService<User> {
     private static long nextId = 0;
+
+    @Autowired
+    public UserService(InMemoryUserStorage storage) {
+        this.storage = storage;
+    }
 
     private void validate(User user) {
         final String name = user.getName();
@@ -26,46 +28,29 @@ public class UserService {
             log.warn("Попытка добавления пользователя с логином, содержащим пробел.");
             throw new ValidationException("Логин не может содержать пробел.");
         }
-        if (name == null || name.isBlank()) {
+        if (name == null || name.isEmpty()) {
             user.setName(user.getLogin());
         }
     }
 
-    @Autowired
-    public UserService(UserStorage storage) {
-        this.storage = storage;
-    }
-
+    @Override
     public void add(User user) {
         validate(user);
         user.setId(++nextId);
-        storage.add(user);
+        storage.add(user.getId(), user);
     }
 
+    @Override
     public void update(User user) {
         validate(user);
-        storage.update(user);
-    }
-
-    public User get(long userId) {
-        return storage.get(userId);
-    }
-
-    public void remove(long userId) {
-        storage.remove(userId);
-    }
-
-    public List<User> getAll() {
-        return storage.getAll();
+        storage.update(user.getId(), user);
     }
 
     public List<User> getUserFriends(int userId) {
         User user = storage.get(userId);
-        List<User> friends = new ArrayList<>();
-        for (long friendId: user.getFriends()) {
-            friends.add(storage.get(friendId));
-        }
-        return friends;
+        return user.getFriends().stream()
+                .map(storage::get)
+                .collect(Collectors.toList());
     }
 
     public void addToFriends(long userId, long friendId) {
@@ -88,15 +73,12 @@ public class UserService {
         friend.removeFriend(userId);
     }
 
-    public Set<User> getCommonFriends(long userId, long otherId) {
-        User user = storage.get(userId);
-        User other = storage.get(otherId);
-        Set<User> commonFriends = new HashSet<>();
-        for (Long friendId: user.getFriends()) {
-            if (other.getFriends().contains(friendId)) {
-                commonFriends.add(storage.get(friendId));
-            }
-        }
-        return commonFriends;
+    public List<User> getCommonFriends(long userId, long otherId) {
+        Set<Long> userFriends = storage.get(userId).getFriends();
+        Set<Long> otherFriends = storage.get(otherId).getFriends();
+        return userFriends.stream()
+                .filter(otherFriends::contains)
+                .map(storage::get)
+                .collect(Collectors.toList());
     }
 }

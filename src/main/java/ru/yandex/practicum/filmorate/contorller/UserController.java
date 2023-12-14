@@ -11,9 +11,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/users")
 @Slf4j
-public class UserController implements Controller<User> {
-    private final UserService service;
-
+public class UserController extends Controller<UserService, User> {
     @Autowired
     public UserController(UserService service) {
         this.service = service;
@@ -22,29 +20,25 @@ public class UserController implements Controller<User> {
     @Override
     @PostMapping
     public User add(@Valid @RequestBody User user) {
-        service.add(user);
-        log.info("Добавлен пользователь.");
-        return user;
+        return super.add(user);
     }
 
     @Override
     @PutMapping
     public User update(@Valid @RequestBody User user) {
-        service.update(user);
-        log.info("Пользователь с id = {} обновлен.", user.getId());
-        return user;
+        return super.update(user);
     }
 
     @Override
     @GetMapping("/{id}")
     public User get(@PathVariable long id) {
-        return service.get(id);
+        return super.get(id);
     }
 
     @Override
     @GetMapping
     public List<User> getAll() {
-        return service.getAll();
+        return super.getAll();
     }
 
     @PutMapping("/{id}/friends/{friendId}")
@@ -56,16 +50,20 @@ public class UserController implements Controller<User> {
     @DeleteMapping("/{id}/friends/{friendId}")
     public void removeFriend(@PathVariable int id, @PathVariable int friendId) {
         service.removeFromFriends(id, friendId);
-        log.info("Пользователь с id = {} удален.", id);
+        log.info("Пользователи с id  = {} и {} удалили друг друга из друзей.", id, friendId);
     }
 
     @GetMapping("/{id}/friends")
     public List<User> getUserFriends(@PathVariable int id) {
-        return service.getUserFriends(id);
+        List<User> friends = service.getUserFriends(id);
+        log.info("Получен список друзей пользователя с id = {}", id);
+        return friends;
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
     public List<User> getCommonFriends(@PathVariable int id, @PathVariable int otherId) {
-        return new ArrayList<>(service.getCommonFriends(id, otherId));
+        List<User> commonFriends = new ArrayList<>(service.getCommonFriends(id, otherId));
+        log.info("Получен список общих друзей для пользователей с id = {} и {}", id, otherId);
+        return commonFriends;
     }
 }
