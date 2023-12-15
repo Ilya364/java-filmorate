@@ -1,19 +1,35 @@
 package ru.yandex.practicum.filmorate.contorller;
 
+import lombok.extern.slf4j.Slf4j;
+import ru.yandex.practicum.filmorate.service.AbstractService;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public abstract class Controller<T> {
-    protected Map<Integer, T> elements = new HashMap<>();
-    protected int nextId = 1;
+@Slf4j
+public abstract class Controller<T extends AbstractService<V>, V> {
+    protected T service;
 
-    public abstract T add(T element);
+    public V add(V element) {
+        service.add(element);
+        log.info("{} добавлен.", element.getClass().getName());
+        return element;
+    }
 
-    public abstract T update(T element);
+    public V update(V element) {
+        service.update(element);
+        log.info("{} обновлен.", element.getClass().getName());
+        return element;
+    }
 
-    public List<T> getAll() {
-        return new ArrayList<>(elements.values());
+    public V get(long id) {
+        V o = service.get(id);
+        log.info("{} получен.", o.getClass().getName());
+        return service.get(id);
+    }
+
+    public List<V> getAll() {
+        List<V> all = service.getAll();
+        log.info("Получен список всех элементов.");
+        return new ArrayList<>(service.getAll());
     }
 }
