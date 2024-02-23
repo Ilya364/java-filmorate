@@ -25,13 +25,13 @@ public class FilmDaoTest {
     private final JdbcTemplate jdbcTemplate;
     private FilmDaoImpl dao;
     private UserDaoImpl userDao;
-    
+
     @BeforeEach
     public void init() {
         dao = new FilmDaoImpl(jdbcTemplate);
         userDao = new UserDaoImpl(jdbcTemplate);
     }
-    
+
     @Test
     public void testAddAndGetFilm() {
         MPA mpa = new MPA((short) 1, "G");
@@ -52,7 +52,7 @@ public class FilmDaoTest {
                 .usingRecursiveComparison()
                 .isEqualTo(film);
     }
-    
+
     @Test
     public void testRemoveFilm() {
         MPA mpa = new MPA((short) 1, "G");
@@ -76,7 +76,7 @@ public class FilmDaoTest {
         
         assertTrue(e.getMessage().contains("Фильм не найден"));
     }
-    
+
     @Test
     public void testUpdateFilm() {
         MPA mpa = new MPA((short) 1, "G");
@@ -103,7 +103,7 @@ public class FilmDaoTest {
         
         assertEquals(film, dao.get(1));
     }
-    
+
     @Test
     public void testGetAllFilms() {
         MPA mpa = new MPA((short) 1, "G");
@@ -129,7 +129,7 @@ public class FilmDaoTest {
         
         assertIterableEquals(List.of(film, film2), dao.getAll());
     }
-    
+
     @Test
     public void testAddLike() {
         MPA mpa = new MPA((short) 1, "G");
@@ -163,7 +163,7 @@ public class FilmDaoTest {
         
         assertArrayEquals(expected, ids);
     }
-    
+
     @Test
     public void testRemoveLike() {
         MPA mpa = new MPA((short) 1, "G");
@@ -200,7 +200,7 @@ public class FilmDaoTest {
                 )
         );
     }
-    
+
     @Test
     public void testGetMostPopularFilms() {
         MPA mpa = new MPA((short) 1, "G");

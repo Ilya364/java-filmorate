@@ -17,19 +17,19 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 public class MPADaoTest {
     private final JdbcTemplate jdbcTemplate;
     private MPADaoImpl dao;
-    
+
     @BeforeEach
     public void init() {
         dao = new MPADaoImpl(jdbcTemplate);
     }
-    
+
     @Test
     public void testGetMpa() {
         MPA mpa = dao.get(1);
         
         assertEquals(new MPA((short) 1, "G"), mpa);
     }
-    
+
     @Test
     public void testGetAllMpa() {
         List<MPA> mpaList = List.of(

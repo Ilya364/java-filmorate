@@ -21,12 +21,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserDaoTest {
     private final JdbcTemplate jdbcTemplate;
     private UserDaoImpl dao;
-    
+
     @BeforeEach
     public void init() {
         dao = new UserDaoImpl(jdbcTemplate);
     }
-    
+
     @Test
     public void testAddAndGetUser() {
         User user = User.builder()
@@ -44,7 +44,7 @@ public class UserDaoTest {
                 .usingRecursiveComparison()
                 .isEqualTo(user);
     }
-    
+
     @Test
     public void testUpdateUser() {
         User user = User.builder()
@@ -66,7 +66,7 @@ public class UserDaoTest {
         
         assertEquals(updated, dao.get(1));
     }
-    
+
     @Test
     public void testRemoveUser() {
         User user = User.builder()
@@ -87,7 +87,7 @@ public class UserDaoTest {
         
         assertTrue(e.getMessage().contains("Пользователь не найден"));
     }
-    
+
     @Test
     public void testGetAllUsers() {
         User user = User.builder()
@@ -107,7 +107,7 @@ public class UserDaoTest {
         
         assertIterableEquals(List.of(user, user2), dao.getAll());
     }
-    
+
     @Test
     public void testAddAndGetUserFriends() {
         User user = User.builder()
@@ -128,7 +128,7 @@ public class UserDaoTest {
         
         assertIterableEquals(List.of(user2), dao.getUserFriends(1));
     }
-    
+
     @Test
     public void testRemoveFriend() {
         User user = User.builder()
@@ -150,7 +150,7 @@ public class UserDaoTest {
         
         assertIterableEquals(List.of(), dao.getUserFriends(1));
     }
-    
+
     @Test
     public void testGetCommonFriends() {
         User user = User.builder()
