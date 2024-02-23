@@ -23,7 +23,7 @@ public abstract class Storage<T> {
     public T get(long id) {
         T element = elements.get(id);
         if (element == null) {
-            throw new NotFoundException("Элемент с id = " + id + " не найден.");
+            throw new NotFoundException("Элемент с id = " + id + " не обнаружен.");
         }
         return element;
     }
