@@ -26,7 +26,7 @@ public class GenreDaoTest {
     @Test
     public void testGetGenre() {
         Genre genre = dao.get(1);
-        
+
         assertEquals(new Genre((short) 1, "Комедия"), genre);
     }
 
@@ -41,7 +41,7 @@ public class GenreDaoTest {
                 new Genre((short) 6, "Боевик")
         );
         List<Genre> dbGenres = dao.getAll();
-        
+
         assertIterableEquals(genres, dbGenres);
     }
 }

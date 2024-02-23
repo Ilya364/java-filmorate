@@ -26,7 +26,7 @@ public class MPADaoTest {
     @Test
     public void testGetMpa() {
         MPA mpa = dao.get(1);
-        
+
         assertEquals(new MPA((short) 1, "G"), mpa);
     }
 
@@ -40,7 +40,7 @@ public class MPADaoTest {
                 new MPA((short) 5, "NC-17")
         );
         List<MPA> dbMpaList = dao.getAll();
-        
+
         assertIterableEquals(mpaList, dbMpaList);
     }
 }

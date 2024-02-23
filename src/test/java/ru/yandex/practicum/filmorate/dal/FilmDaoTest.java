@@ -44,9 +44,9 @@ public class FilmDaoTest {
                 .mpa(mpa)
                 .build();
         dao.add(film);
-        
+
         Film saved = dao.get(1);
-        
+
         assertThat(saved)
                 .isNotNull()
                 .usingRecursiveComparison()
@@ -65,15 +65,15 @@ public class FilmDaoTest {
                 .mpa(mpa)
                 .build();
         dao.add(film);
-        
+
         dao.remove(1);
-        
+
         NotFoundException e = assertThrows(
                 NotFoundException.class,
                 () -> dao.get(1),
                 "Ожидалось исключение NotFoundException"
         );
-        
+
         assertTrue(e.getMessage().contains("Фильм не найден"));
     }
 
@@ -89,7 +89,7 @@ public class FilmDaoTest {
                 .mpa(mpa)
                 .build();
         dao.add(film);
-        
+
         film = Film.builder()
                 .id(1)
                 .name("nameNew")
@@ -100,7 +100,7 @@ public class FilmDaoTest {
                 .mpa(mpa)
                 .build();
         dao.update(film);
-        
+
         assertEquals(film, dao.get(1));
     }
 
@@ -126,7 +126,7 @@ public class FilmDaoTest {
                 .build();
         dao.add(film);
         dao.add(film2);
-        
+
         assertIterableEquals(List.of(film, film2), dao.getAll());
     }
 
@@ -150,7 +150,7 @@ public class FilmDaoTest {
         dao.add(film);
         userDao.add(user);
         dao.addLike(1, 1);
-        
+
         long[] ids = jdbcTemplate.query(
                 "SELECT * FROM likes WHERE user_id = ? AND film_id = ?;",
                 rs -> {
@@ -160,7 +160,7 @@ public class FilmDaoTest {
                     return new long[] {userId, filmId};
                 }, 1, 1);
         long[] expected = {1, 1};
-        
+
         assertArrayEquals(expected, ids);
     }
 
@@ -184,9 +184,9 @@ public class FilmDaoTest {
         dao.add(film);
         userDao.add(user);
         dao.addLike(1, 1);
-    
+
         dao.deleteLike(1, 1);
-        
+
         Throwable e = assertThrows(
                 Throwable.class,
                 () -> jdbcTemplate.query(
@@ -233,9 +233,9 @@ public class FilmDaoTest {
         dao.add(film);
         dao.add(film2);
         dao.add(film3);
-        
+
         List<Film> popular = dao.getMostPopular(2);
-        
+
         assertIterableEquals(List.of(film2, film), popular);
     }
 }

@@ -36,9 +36,9 @@ public class UserDaoTest {
                 .birthday(LocalDate.of(2003, 6, 4))
                 .build();
         dao.add(user);
-        
+
         User saved = dao.get(1);
-        
+
         assertThat(saved)
                 .isNotNull()
                 .usingRecursiveComparison()
@@ -54,7 +54,7 @@ public class UserDaoTest {
                 .birthday(LocalDate.of(2003, 6, 4))
                 .build();
         dao.add(user);
-        
+
         User updated = User.builder()
                 .id(1)
                 .name("updatedName")
@@ -63,7 +63,7 @@ public class UserDaoTest {
                 .birthday(LocalDate.of(2001, 6, 4))
                 .build();
         dao.update(updated);
-        
+
         assertEquals(updated, dao.get(1));
     }
 
@@ -76,15 +76,15 @@ public class UserDaoTest {
                 .email("usermail.03@yandex.ru")
                 .build();
         dao.add(user);
-        
+
         dao.remove(1);
-        
+
         NotFoundException e = assertThrows(
                 NotFoundException.class,
                 () -> dao.get(1),
                 "Ожидалось исключение NotFoundException"
         );
-        
+
         assertTrue(e.getMessage().contains("Пользователь не найден"));
     }
 
@@ -104,7 +104,7 @@ public class UserDaoTest {
                 .build();
         dao.add(user);
         dao.add(user2);
-        
+
         assertIterableEquals(List.of(user, user2), dao.getAll());
     }
 
@@ -125,7 +125,7 @@ public class UserDaoTest {
         dao.add(user);
         dao.add(user2);
         dao.addToFriends(1, 2);
-        
+
         assertIterableEquals(List.of(user2), dao.getUserFriends(1));
     }
 
@@ -147,7 +147,7 @@ public class UserDaoTest {
         dao.add(user2);
         dao.addToFriends(1, 2);
         dao.removeFromFriends(1, 2);
-        
+
         assertIterableEquals(List.of(), dao.getUserFriends(1));
     }
 
@@ -176,7 +176,7 @@ public class UserDaoTest {
         dao.add(user3);
         dao.addToFriends(1, 2);
         dao.addToFriends(3, 2);
-        
+
         assertIterableEquals(List.of(user2), dao.getCommonFriends(1, 3));
     }
 }
