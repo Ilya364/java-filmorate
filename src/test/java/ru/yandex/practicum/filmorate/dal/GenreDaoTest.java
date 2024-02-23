@@ -22,7 +22,7 @@ public class GenreDaoTest {
     public void init() {
         dao = new GenreDaoImpl(jdbcTemplate);
     }
-    
+
     @Test
     public void testGetGenre() {
         Genre genre = dao.get(1);
