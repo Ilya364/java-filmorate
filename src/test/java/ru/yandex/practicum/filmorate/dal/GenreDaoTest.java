@@ -8,9 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.dal.impl.GenreDaoImpl;
 import ru.yandex.practicum.filmorate.model.Genre;
-
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
@@ -19,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 public class GenreDaoTest {
     private final JdbcTemplate jdbcTemplate;
     private GenreDaoImpl dao;
-    
+
     @BeforeEach
     public void init() {
         dao = new GenreDaoImpl(jdbcTemplate);
@@ -31,7 +29,7 @@ public class GenreDaoTest {
         
         assertEquals(new Genre((short) 1, "Комедия"), genre);
     }
-    
+
     @Test
     public void testGetAllGenres() {
         List<Genre> genres = List.of(
