@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 public class MPADaoTest {
     private final JdbcTemplate jdbcTemplate;
     private MPADaoImpl dao;
-    
+
     @BeforeEach
     public void init() {
         dao = new MPADaoImpl(jdbcTemplate);
