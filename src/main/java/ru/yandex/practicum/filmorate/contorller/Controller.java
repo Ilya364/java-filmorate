@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public abstract class Controller<T extends AbstractService<V>, V> {
+public abstract class Controller<T extends AbstractService, V> {
     protected T service;
 
     public V add(V element) {
@@ -16,15 +16,15 @@ public abstract class Controller<T extends AbstractService<V>, V> {
     }
 
     public V update(V element) {
-        service.update(element);
+        V updated = (V) service.update(element);
         log.info("{} обновлен.", element.getClass().getName());
-        return element;
+        return updated;
     }
 
     public V get(long id) {
-        V o = service.get(id);
+        V o = (V)service.get(id);
         log.info("{} получен.", o.getClass().getName());
-        return service.get(id);
+        return o;
     }
 
     public List<V> getAll() {

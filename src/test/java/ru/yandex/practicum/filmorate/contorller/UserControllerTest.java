@@ -22,9 +22,12 @@ class UserControllerTest {
 
     @Test
     public void shouldCreateUser() {
-        User user = new User("ilya.trishkin.03@mail.ru", "login");
-        user.setName("name");
-        user.setBirthday(LocalDate.of(2003, 4, 6));
+        User user = User.builder()
+                .name("name")
+                .login("login")
+                .email("ilya.trishkin.03@mail.ru")
+                .birthday(LocalDate.of(2003, 4, 6))
+                .build();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
 
         assertEquals(0, violations.size());
@@ -32,8 +35,11 @@ class UserControllerTest {
 
     @Test
     public void shouldCreateUserWhenEmptyName() {
-        User user = new User("ilya.trishkin.03@mail.ru", "login");
-        user.setBirthday(LocalDate.of(2003, 4, 6));
+        User user = User.builder()
+                .login("login")
+                .email("ilya.trishkin.03@mail.ru")
+                .birthday(LocalDate.of(2003, 4, 6))
+                .build();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
 
         assertEquals(0, violations.size());
@@ -41,9 +47,12 @@ class UserControllerTest {
 
     @Test
     public void shouldNotCreateUserWhenInvalidEmail() {
-        User user = new User("ilya.trishkinmail", "login");
-        user.setName("name");
-        user.setBirthday(LocalDate.of(2003, 4, 6));
+        User user = User.builder()
+                .name("name")
+                .login("login")
+                .email("ilya.trishkinmail")
+                .birthday(LocalDate.of(2003, 4, 6))
+                .build();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
 
         assertEquals(1, violations.size());
@@ -51,9 +60,12 @@ class UserControllerTest {
 
     @Test
     public void shouldNotCreateUserWhenEmptyLogin() {
-        User user = new User("ilya.trishkin.03@mail.ru", "");
-        user.setName("name");
-        user.setBirthday(LocalDate.of(2003, 4, 6));
+        User user = User.builder()
+                .name("name")
+                .login("")
+                .email("ilya.trishkin.03@mail.ru")
+                .birthday(LocalDate.of(2003, 4, 6))
+                .build();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
 
         assertEquals(1, violations.size());
@@ -61,9 +73,12 @@ class UserControllerTest {
 
     @Test
     public void shouldNotCreateUserWhenFutureBirthday() {
-        User user = new User("ilya.trishkin.03@mail.ru", "login");
-        user.setName("name");
-        user.setBirthday(LocalDate.of(2024, 4, 6));
+        User user = User.builder()
+                .name("name")
+                .login("login")
+                .email("ilya.trishkin.03@mail.ru")
+                .birthday(LocalDate.of(2024, 4, 6))
+                .build();
         Set<ConstraintViolation<User>> violations = validator.validate(user);
 
         assertEquals(1, violations.size());

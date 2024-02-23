@@ -24,8 +24,12 @@ class FilmControllerTest {
 
     @Test
     public void shouldCreateFilm() {
-        Film film = new Film("name", "desc",
-                LocalDate.of(2020, 11, 15), 50);
+        Film film = Film.builder()
+                .name("name")
+                .description("desc")
+                .releaseDate(LocalDate.of(2020, 11, 15))
+                .duration(50)
+                .build();
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
 
         assertEquals(0, violations.size());
@@ -33,8 +37,12 @@ class FilmControllerTest {
 
     @Test
     public void shouldNotCreateFilmWhenInvalidDate() {
-        Film film = new Film("name", "desc",
-                LocalDate.of(1884, 11, 15), 50);
+        Film film = Film.builder()
+                .name("name")
+                .description("desc")
+                .releaseDate(LocalDate.of(1884, 11, 15))
+                .duration(50)
+                .build();
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
 
         assertEquals(1, violations.size());
@@ -42,8 +50,12 @@ class FilmControllerTest {
 
     @Test
     public void shouldNotCreateFilmWhenEmptyName() {
-        Film film = new Film("", "desc",
-                LocalDate.of(2020, 11, 15), 50);
+        Film film = Film.builder()
+                .name("")
+                .description("desc")
+                .releaseDate(LocalDate.of(2020, 11, 15))
+                .duration(50)
+                .build();
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
 
         assertEquals(1, violations.size());
@@ -51,13 +63,16 @@ class FilmControllerTest {
 
     @Test
     public void shouldNotCreateFilmWhenDescriptionLonger200() {
-        Film film = new Film("name",
-                "Кобб – талантливый вор, лучший из лучших в опасном искусстве извлечения: " +
+        Film film = Film.builder()
+                .name("name")
+                .description("Кобб – талантливый вор, лучший из лучших в опасном искусстве извлечения: " +
                         "он крадет ценные секреты из глубин подсознания во время сна, когда человеческий " +
                         "разум наиболее уязвим. Редкие способности Кобба сделали его ценным игроком в привычном " +
                         "к предательству мире промышленного шпионажа, но они же превратили его в извечного " +
-                        "беглеца и лишили всего, что он когда-либо любил.",
-                LocalDate.of(2020, 11, 15), 50);
+                        "беглеца и лишили всего, что он когда-либо любил.")
+                .releaseDate(LocalDate.of(2020, 11, 15))
+                .duration(50)
+                .build();
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
 
         assertEquals(1, violations.size());
@@ -65,8 +80,12 @@ class FilmControllerTest {
 
     @Test
     public void shouldNotCreateFilmWhenNegativeDuration() {
-        Film film = new Film("name", "desc",
-                LocalDate.of(2020, 11, 15), -50);
+        Film film = Film.builder()
+                .name("name")
+                .description("desc")
+                .releaseDate(LocalDate.of(2020, 11, 15))
+                .duration(-50)
+                .build();
         Set<ConstraintViolation<Film>> violations = validator.validate(film);
 
         assertEquals(1, violations.size());

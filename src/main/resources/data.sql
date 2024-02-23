@@ -1,0 +1,6 @@
+INSERT INTO rating_mpa (name)
+values ('G'), ('PG'), ('PG-13'), ('R'), ('NC-17');
+
+insert into genres (name)
+values ('Комедия'), ('Драма'), ('Мультфильм'), ('Триллер'),
+ ('Документальный'), ('Боевик');

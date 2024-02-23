@@ -2,22 +2,21 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dal.UserDao;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class UserService extends AbstractService<User> {
+public class UserService extends AbstractService<UserDao, User> {
     private static long nextId = 0;
 
     @Autowired
-    public UserService(InMemoryUserStorage storage) {
-        this.storage = storage;
+    public UserService(@Qualifier("UserDaoImpl") UserDao userDao) {
+        dao = userDao;
     }
 
     private void validate(User user) {
@@ -35,43 +34,28 @@ public class UserService extends AbstractService<User> {
     @Override
     public void add(User user) {
         validate(user);
-        user.setId(++nextId);
-        storage.add(user.getId(), user);
+        super.add(user);
     }
 
     @Override
-    public void update(User user) {
+    public User update(User user) {
         validate(user);
-        storage.update(user.getId(), user);
+        return super.update(user);
     }
 
-    public List<User> getUserFriends(int userId) {
-        User user = storage.get(userId);
-        return user.getFriends().stream()
-                .map(storage::get)
-                .collect(Collectors.toList());
+    public List<User> getUserFriends(long userId) {
+        return dao.getUserFriends(userId);
     }
 
     public void addToFriends(long userId, long friendId) {
-        User user = storage.get(userId);
-        User friend = storage.get(friendId);
-        user.addFriend(friendId);
-        friend.addFriend(userId);
+        dao.addToFriends(userId, friendId);
     }
 
     public void removeFromFriends(long userId, long friendId) {
-        User user = storage.get(userId);
-        User friend = storage.get(friendId);
-        user.removeFriend(friendId);
-        friend.removeFriend(userId);
+        dao.removeFromFriends(userId, friendId);
     }
 
     public List<User> getCommonFriends(long userId, long otherId) {
-        Set<Long> userFriends = storage.get(userId).getFriends();
-        Set<Long> otherFriends = storage.get(otherId).getFriends();
-        return userFriends.stream()
-                .filter(otherFriends::contains)
-                .map(storage::get)
-                .collect(Collectors.toList());
+        return dao.getCommonFriends(userId, otherId);
     }
 }

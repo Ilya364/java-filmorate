@@ -1,24 +1,30 @@
 package ru.yandex.practicum.filmorate.service;
 
-import ru.yandex.practicum.filmorate.storage.Storage;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.yandex.practicum.filmorate.dal.Dao;
 import java.util.List;
 
-public abstract class AbstractService<T> {
-    protected Storage<T> storage;
+public abstract class AbstractService<T extends Dao, V> {
+    @Autowired
+    protected T dao;
 
-    public abstract void add(T element);
+    public void add(V o) {
+        dao.add(o);
+    }
 
-    public abstract void update(T element);
+    public V get(long id) {
+        return (V)dao.get(id);
+    }
 
-    public T get(long id) {
-        return storage.get(id);
+    public V update(V o) {
+        return (V) dao.update(o);
     }
 
     public void remove(long id) {
-        storage.remove(id);
+        dao.remove(id);
     }
 
-    public List<T> getAll() {
-        return storage.getAll();
+    public List<V> getAll() {
+        return dao.getAll();
     }
 }
