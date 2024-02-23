@@ -1,7 +1,7 @@
 drop table if exists friends;
 drop table if exists film_genres;
 drop table if exists likes;
-drop table if exists genres;
+droP table if exists genres;
 drop table if exists users;
 drop table if exists films;
 drop table if exists rating_mpa;
