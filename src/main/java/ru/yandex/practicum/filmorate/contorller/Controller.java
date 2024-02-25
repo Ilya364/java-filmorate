@@ -1,35 +1,38 @@
 package ru.yandex.practicum.filmorate.contorller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.yandex.practicum.filmorate.model.BaseUnit;
 import ru.yandex.practicum.filmorate.service.AbstractService;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public abstract class Controller<T extends AbstractService, V> {
+public abstract class Controller<T extends AbstractService, V extends BaseUnit> {
+    @Autowired
     protected T service;
 
-    public V add(V element) {
-        service.add(element);
-        log.info("{} добавлен.", element.getClass().getName());
-        return element;
+    public BaseUnit add(V o) {
+        service.add(o);
+        log.info("{} добавлен.", o.getClass().getName());
+        return o;
     }
 
-    public V update(V element) {
-        V updated = (V) service.update(element);
-        log.info("{} обновлен.", element.getClass().getName());
+    public BaseUnit update(V o) {
+        BaseUnit updated = service.update(o);
+        log.info("{} обновлен.", o.getClass().getName());
         return updated;
     }
 
-    public V get(long id) {
-        V o = (V)service.get(id);
+    public BaseUnit get(long id) {
+        BaseUnit o = service.get(id);
         log.info("{} получен.", o.getClass().getName());
         return o;
     }
 
-    public List<V> getAll() {
-        List<V> all = service.getAll();
+    public List<BaseUnit> getAll() {
+        List all = service.getAll();
         log.info("Получен список всех элементов.");
-        return new ArrayList<>(service.getAll());
+        return new ArrayList<>(all);
     }
 }

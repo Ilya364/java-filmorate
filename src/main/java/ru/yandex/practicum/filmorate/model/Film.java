@@ -12,7 +12,7 @@ import java.util.Set;
 @Data
 @NotNull
 @Builder
-public class Film {
+public class Film extends BaseUnit {
     private long id;
     @NotBlank
     private final String name;

@@ -2,9 +2,10 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.yandex.practicum.filmorate.dal.Dao;
+import ru.yandex.practicum.filmorate.model.BaseUnit;
 import java.util.List;
 
-public abstract class AbstractService<T extends Dao, V> {
+public abstract class AbstractService<T extends Dao, V extends BaseUnit> {
     @Autowired
     protected T dao;
 
@@ -12,19 +13,19 @@ public abstract class AbstractService<T extends Dao, V> {
         dao.add(o);
     }
 
-    public V get(long id) {
-        return (V)dao.get(id);
+    public BaseUnit get(long id) {
+        return dao.get(id);
     }
 
-    public V update(V o) {
-        return (V) dao.update(o);
+    public BaseUnit update(V o) {
+        return dao.update(o);
     }
 
     public void remove(long id) {
         dao.remove(id);
     }
 
-    public List<V> getAll() {
+    public List<BaseUnit> getAll() {
         return dao.getAll();
     }
 }

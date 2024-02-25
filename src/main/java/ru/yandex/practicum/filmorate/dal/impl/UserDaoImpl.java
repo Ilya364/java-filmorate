@@ -1,13 +1,13 @@
 package ru.yandex.practicum.filmorate.dal.impl;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dal.UserDao;
+import ru.yandex.practicum.filmorate.dal.mapper.UserMapper;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import java.sql.Date;
@@ -17,19 +17,8 @@ import java.util.Objects;
 
 @Component
 @AllArgsConstructor
-@Qualifier("UserDaoImpl")
 public class UserDaoImpl implements UserDao {
     private final JdbcTemplate jdbcTemplate;
-
-    private RowMapper<User> userRowMapper() {
-        return (rs, rowNum) -> User.builder()
-                .email(rs.getString("email"))
-                .login(rs.getString("login"))
-                .name(rs.getString("name"))
-                .birthday(rs.getDate("birthday").toLocalDate())
-                .id(rs.getInt("id"))
-                .build();
-    }
 
     @Override
     public User add(User user) {
@@ -56,14 +45,14 @@ public class UserDaoImpl implements UserDao {
         String sqlCheck = "SELECT * " +
                 "FROM users " +
                 "WHERE id = ?;";
-        User updated;
-        try {
-            jdbcTemplate.update(sqlQuery,
-                    user.getName(), user.getLogin(), user.getEmail(), user.getBirthday(), user.getId());
-            updated = jdbcTemplate.queryForObject(sqlCheck, userRowMapper(), user.getId());
-        } catch (Throwable e) {
-            throw new NotFoundException("Пользователь не найден");
+
+        if (get(user.getId()) == null) {
+            throw new NotFoundException("Пользователь не найден " + user.getId());
         }
+        User updated;
+        jdbcTemplate.update(sqlQuery,
+                user.getName(), user.getLogin(), user.getEmail(), user.getBirthday(), user.getId());
+        updated = jdbcTemplate.queryForObject(sqlCheck, UserMapper.userRowMapper(), user.getId());
         return updated;
     }
 
@@ -73,8 +62,8 @@ public class UserDaoImpl implements UserDao {
                 "FROM users u " +
                 "WHERE u.id = ?;";
         try {
-            return jdbcTemplate.queryForObject(sql, userRowMapper(), id);
-        } catch (Throwable e) {
+            return jdbcTemplate.queryForObject(sql, UserMapper.userRowMapper(), id);
+        } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("Пользователь не найден");
         }
     }
@@ -90,7 +79,7 @@ public class UserDaoImpl implements UserDao {
     public List<User> getAll() {
         String sql = "SELECT * " +
                 "FROM users;";
-        return jdbcTemplate.query(sql, userRowMapper());
+        return jdbcTemplate.query(sql, UserMapper.userRowMapper());
     }
 
     @Override
@@ -99,7 +88,7 @@ public class UserDaoImpl implements UserDao {
                 "FROM users u " +
                 "JOIN friends f ON f.second_user_id = u.id " +
                 "WHERE f.first_user_id = ?";
-        return jdbcTemplate.query(sql, userRowMapper(), id);
+        return jdbcTemplate.query(sql, UserMapper.userRowMapper(), id);
     }
 
     @Override
@@ -134,6 +123,6 @@ public class UserDaoImpl implements UserDao {
                 "                              FROM friends" +
                 "                              WHERE first_user_id = ?) o ON f.second_user_id = o.second_user_id" +
                 "                  WHERE f.first_user_id = ?);";
-        return jdbcTemplate.query(sqlQuery, userRowMapper(), userId, otherId);
+        return jdbcTemplate.query(sqlQuery, UserMapper.userRowMapper(), userId, otherId);
     }
 }

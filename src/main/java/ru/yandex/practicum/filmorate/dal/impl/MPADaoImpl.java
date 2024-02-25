@@ -1,10 +1,11 @@
 package ru.yandex.practicum.filmorate.dal.impl;
 
 import lombok.AllArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dal.MPADao;
+import ru.yandex.practicum.filmorate.dal.mapper.MpaMapper;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.MPA;
 import java.util.List;
@@ -14,19 +15,14 @@ import java.util.List;
 public class MPADaoImpl implements MPADao {
     private final JdbcTemplate template;
 
-    private RowMapper<MPA> mpaRowMapper() {
-        return (rs, rowNum) -> new MPA(rs.getShort("id"),
-                (rs.getString("name")));
-    }
-
     @Override
     public MPA get(long id) {
         String sqlQuery = "SELECT * " +
                 "FROM rating_mpa " +
                 "WHERE id = ?;";
         try {
-            return template.queryForObject(sqlQuery, mpaRowMapper(), id);
-        } catch (Throwable e) {
+            return template.queryForObject(sqlQuery, MpaMapper.mpaRowMapper(), id);
+        } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("Рейтинга с таким id не существует.");
         }
     }
@@ -35,7 +31,7 @@ public class MPADaoImpl implements MPADao {
     public List<MPA> getAll() {
         String sqlQuery = "SELECT * FROM rating_mpa " +
                 "ORDER BY id ASC;";
-        return template.query(sqlQuery, mpaRowMapper());
+        return template.query(sqlQuery, MpaMapper.mpaRowMapper());
     }
 
     @Override
