@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.contorller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.BaseUnit;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import javax.validation.Valid;
@@ -12,32 +12,27 @@ import java.util.List;
 @RequestMapping("/films")
 @Slf4j
 public class FilmController extends Controller<FilmService, Film> {
-    @Autowired
-    public FilmController(FilmService service) {
-        this.service = service;
-    }
-
     @Override
     @PostMapping
-    public Film add(@Valid @RequestBody Film film) {
+    public BaseUnit add(@Valid @RequestBody Film film) {
         return super.add(film);
     }
 
     @Override
     @PutMapping
-    public Film update(@Valid @RequestBody Film film) {
-        return super.update(film);
+    public BaseUnit update(@Valid @RequestBody Film o) {
+        return super.update(o);
     }
 
     @Override
     @GetMapping("{id}")
-    public Film get(@PathVariable long id) {
+    public BaseUnit get(@PathVariable long id) {
         return super.get(id);
     }
 
     @Override
     @GetMapping
-    public List<Film> getAll() {
+    public List<BaseUnit> getAll() {
         return super.getAll();
     }
 
@@ -56,7 +51,7 @@ public class FilmController extends Controller<FilmService, Film> {
     @GetMapping("/popular")
     public List<Film> getMostPopular(@RequestParam(defaultValue = "10") int count) {
         List<Film> popularFilms = service.getMostPopular(count);
-        log.info("Получен список из {} самых популярных фильмов.",count);
+        log.info("Получен список из {} самых популярных фильмов.", count);
         return popularFilms;
     }
 }

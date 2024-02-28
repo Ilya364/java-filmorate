@@ -29,7 +29,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Map<String, String> handleInternalError(final Throwable e) {
-        log.error("Внутренняя ошибка.");
+        log.error("Внутренняя ошибка." + e.getMessage());
         return Map.of("Внутренняя ошибка сервера", e.getMessage());
     }
 }

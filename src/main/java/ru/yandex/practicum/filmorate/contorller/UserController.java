@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.contorller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.BaseUnit;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import javax.validation.Valid;
@@ -12,32 +12,27 @@ import java.util.*;
 @RequestMapping("/users")
 @Slf4j
 public class UserController extends Controller<UserService, User> {
-    @Autowired
-    public UserController(UserService service) {
-        this.service = service;
-    }
-
     @Override
     @PostMapping
-    public User add(@Valid @RequestBody User user) {
+    public BaseUnit add(@Valid @RequestBody User user) {
         return super.add(user);
     }
 
     @Override
     @PutMapping
-    public User update(@Valid @RequestBody User user) {
-        return super.update(user);
+    public BaseUnit update(@Valid @RequestBody User o) {
+        return super.update(o);
     }
 
     @Override
     @GetMapping("/{id}")
-    public User get(@PathVariable long id) {
+    public BaseUnit get(@PathVariable long id) {
         return super.get(id);
     }
 
     @Override
     @GetMapping
-    public List<User> getAll() {
+    public List<BaseUnit> getAll() {
         return super.getAll();
     }
 
